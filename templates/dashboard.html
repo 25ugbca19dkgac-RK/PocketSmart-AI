@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Dashboard – PocketSmart AI{% endblock %}
+
+{% block content %}
+<div class="dashboard-page">
+    <div class="dashboard-header">
+        <h1>Welcome back, <span class="gradient-text">{{ user.username }}</span> 👋</h1>
+        <p>Choose a planner to get started with AI-powered budget recommendations.</p>
+    </div>
+
+    <!-- Planner Cards -->
+    <div class="planner-grid">
+        <a href="/home-planner" class="planner-card" style="text-decoration:none;">
+            <div class="planner-icon" style="background: var(--gradient-cool);">
+                <i class="fas fa-couch"></i>
+            </div>
+            <h3>Home Interior Planner</h3>
+            <p>Plan your home decor with room-wise budget allocation. Get product suggestions from IKEA, Amazon & Flipkart.</p>
+            <span class="btn btn-cool btn-sm">
+                <i class="fas fa-arrow-right"></i> Start Planning
+            </span>
+        </a>
+
+        <a href="/party-planner" class="planner-card" style="text-decoration:none;">
+            <div class="planner-icon" style="background: var(--gradient-warm);">
+                <i class="fas fa-glass-cheers"></i>
+            </div>
+            <h3>Party Budget Planner</h3>
+            <p>Organize events with smart budget splits across catering, decoration, venue & entertainment.</p>
+            <span class="btn btn-warm btn-sm">
+                <i class="fas fa-arrow-right"></i> Start Planning
+            </span>
+        </a>
+
+        <a href="/jewelry-planner" class="planner-card" style="text-decoration:none;">
+            <div class="planner-icon" style="background: var(--gradient-rose);">
+                <i class="fas fa-gem"></i>
+            </div>
+            <h3>Jewelry Advisor</h3>
+            <p>Get occasion-matched jewelry suggestions. Upload outfit images for AI color coordination analysis.</p>
+            <span class="btn btn-rose btn-sm">
+                <i class="fas fa-arrow-right"></i> Start Planning
+            </span>
+        </a>
+    </div>
+
+    <!-- Recent Activity -->
+    <div style="max-width: var(--container-max); margin: 0 auto;">
+        <h2 style="font-family: var(--font-display); font-size: 1.4rem; margin-bottom: 20px;">
+            <i class="fas fa-clock" style="color: var(--accent-primary);"></i> Recent Activity
+        </h2>
+
+        {% if history %}
+        <div class="history-list">
+            {% for item in history[:5] %}
+            <div class="history-item">
+                <div class="history-item-header">
+                    <span class="history-category category-{{ item.category }}">
+                        {% if item.category == 'home' %}
+                            <i class="fas fa-couch"></i> Home
+                        {% elif item.category == 'party' %}
+                            <i class="fas fa-glass-cheers"></i> Party
+                        {% else %}
+                            <i class="fas fa-gem"></i> Jewelry
+                        {% endif %}
+                    </span>
+                    <span class="history-date">{{ item.timestamp[:10] }}</span>
+                </div>
+                <p class="history-preview">{{ item.result[:200] }}...</p>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="/history" class="btn btn-outline btn-sm">
+                <i class="fas fa-history"></i> View Full History
+            </a>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-clipboard-list"></i>
+            <h3>No recommendations yet</h3>
+            <p>Start with any planner above to get your first AI-powered budget recommendation!</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

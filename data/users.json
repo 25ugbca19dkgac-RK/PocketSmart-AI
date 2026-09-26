@@ -1,0 +1,20 @@
+[
+  {
+    "username": "testuser",
+    "email": "test@test.com",
+    "hashed_password": "$2b$12$LqvgoT.Lv44ZV4Mf.GPkNu1RIcX1w7qc8EACR6YxhxVd9HgvCrBbS",
+    "created_at": "2026-09-24T11:48:16.193838+00:00"
+  },
+  {
+    "username": "RANJITH KUMAR P",
+    "email": "25ugbca19dkgac@gmail.com",
+    "hashed_password": "$2b$12$dntSDXCVW7b8d.bfXUBUz.L2xSBQVPoLLmBEL.NjnNhLTqXW0SxmO",
+    "created_at": "2026-09-24T11:54:25.812006+00:00"
+  },
+  {
+    "username": "Karthikeyen",
+    "email": "25ugbcalldkgac@gmail.com",
+    "hashed_password": "$2b$12$6D8.P7uCnKdQVqzg1KCH.upIefiWUooTrTGAIzjn2nJ.ApN5XMgsq",
+    "created_at": "2026-09-25T04:08:10.948356+00:00"
+  }
+]

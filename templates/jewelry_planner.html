@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block title %}Jewelry Budget Planner – PocketSmart AI{% endblock %}
+
+{% block content %}
+<div class="planner-page">
+    <div class="planner-container">
+        <div class="planner-form-card">
+            <h2><i class="fas fa-gem" style="color: #f43f5e;"></i> Jewelry Budget Planner</h2>
+            <p class="form-subtitle">Get AI-powered jewelry recommendations matched to your occasion, style, and outfit. Upload an image for color coordination!</p>
+
+            <form id="jewelryForm" onsubmit="submitJewelryPlan(event)" enctype="multipart/form-data">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="budget">Budget (₹)</label>
+                        <input type="number" id="budget" class="form-control" placeholder="e.g., 15000" required min="500">
+                    </div>
+                    <div class="form-group">
+                        <label for="occasion">Occasion</label>
+                        <select id="occasion" class="form-control">
+                            <option value="wedding">Wedding</option>
+                            <option value="engagement">Engagement</option>
+                            <option value="festival">Festival (Diwali, Eid, etc.)</option>
+                            <option value="party">Party / Reception</option>
+                            <option value="office">Office / Professional</option>
+                            <option value="casual">Casual / Everyday</option>
+                            <option value="anniversary">Anniversary</option>
+                            <option value="graduation">Graduation</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="stylePreference">Style Preference</label>
+                        <select id="stylePreference" class="form-control">
+                            <option value="traditional">Traditional / Ethnic</option>
+                            <option value="contemporary">Contemporary</option>
+                            <option value="minimalist">Minimalist</option>
+                            <option value="statement">Statement / Bold</option>
+                            <option value="vintage">Vintage / Antique</option>
+                            <option value="boho">Bohemian</option>
+                            <option value="elegant">Elegant / Classic</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="metalPreference">Metal Preference</label>
+                        <select id="metalPreference" class="form-control">
+                            <option value="gold">Gold</option>
+                            <option value="silver">Silver</option>
+                            <option value="rose gold">Rose Gold</option>
+                            <option value="platinum">Platinum</option>
+                            <option value="artificial">Artificial / Fashion</option>
+                            <option value="mixed">Mixed / No Preference</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Outfit Image (Optional – for color coordination)</label>
+                    <div class="file-upload-zone" id="uploadZone">
+                        <input type="file" id="outfitImage" accept="image/*">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Drag & drop or click to upload your outfit image</p>
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top:4px;">Supports JPG, PNG, WEBP (max 5MB)</p>
+                        <div class="file-name" id="fileName"></div>
+                    </div>
+                    <div id="imagePreview" style="margin-top: 12px; display: none;">
+                        <img id="previewImg" style="max-height: 200px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-rose btn-block btn-lg" id="submitBtn">
+                    <i class="fas fa-wand-magic-sparkles"></i> Get Jewelry Recommendations
+                </button>
+            </form>
+        </div>
+
+        <div id="resultsContainer" class="results-container"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Image preview
+document.getElementById('outfitImage').addEventListener('change', function() {
+    const file = this.files[0];
+    const fileName = document.getElementById('fileName');
+    const preview = document.getElementById('imagePreview');
+    const previewImg = document.getElementById('previewImg');
+
+    if (file) {
+        fileName.textContent = file.name;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            previewImg.src = e.target.result;
+            preview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    } else {
+        fileName.textContent = '';
+        preview.style.display = 'none';
+    }
+});
+
+async function submitJewelryPlan(e) {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append('budget', document.getElementById('budget').value);
+    formData.append('occasion', document.getElementById('occasion').value);
+    formData.append('style_preference', document.getElementById('stylePreference').value);
+    formData.append('metal_preference', document.getElementById('metalPreference').value);
+
+    const imageInput = document.getElementById('outfitImage');
+    if (imageInput.files.length > 0) {
+        formData.append('outfit_image', imageInput.files[0]);
+    }
+
+    showLoading('Curating jewelry recommendations...', 'Gemini AI is analyzing style, occasion, and budget');
+
+    try {
+        const response = await fetch('/generate-jewelry', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!response.ok) {
+            const err = await response.json();
+            throw new Error(err.detail || 'Failed to generate jewelry recommendations');
+        }
+
+        const data = await response.json();
+        displayResults(data);
+    } catch (error) {
+        alert('Error: ' + error.message);
+    } finally {
+        hideLoading();
+    }
+}
+</script>
+{% endblock %}

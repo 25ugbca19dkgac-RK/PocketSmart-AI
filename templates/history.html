@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Recommendation History – PocketSmart AI{% endblock %}
+
+{% block content %}
+<div class="dashboard-page">
+    <div class="dashboard-header">
+        <h1><i class="fas fa-history" style="color: var(--accent-primary);"></i> Recommendation History</h1>
+        <p>Browse your past AI-generated budget recommendations and plans.</p>
+    </div>
+
+    {% if history %}
+    <div class="history-list">
+        {% for item in history %}
+        <div class="history-item" onclick="this.classList.toggle('expanded')">
+            <div class="history-item-header">
+                <span class="history-category category-{{ item.category }}">
+                    {% if item.category == 'home' %}
+                        <i class="fas fa-couch"></i> Home Interior
+                    {% elif item.category == 'party' %}
+                        <i class="fas fa-glass-cheers"></i> Party Planning
+                    {% else %}
+                        <i class="fas fa-gem"></i> Jewelry
+                    {% endif %}
+                </span>
+                <span class="history-date">
+                    <i class="fas fa-calendar-alt"></i> {{ item.timestamp[:10] }}
+                </span>
+            </div>
+
+            <!-- Input Summary -->
+            <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 10px;">
+                {% if item.inputs.budget %}
+                <span class="platform-tag" style="background: rgba(99, 102, 241, 0.1); border-color: rgba(99, 102, 241, 0.2); color: var(--accent-tertiary);">
+                    <i class="fas fa-wallet"></i> ₹{{ "{:,.0f}".format(item.inputs.budget) }}
+                </span>
+                {% endif %}
+                {% if item.inputs.event_type %}
+                <span class="platform-tag">{{ item.inputs.event_type }}</span>
+                {% endif %}
+                {% if item.inputs.guest_count %}
+                <span class="platform-tag">{{ item.inputs.guest_count }} guests</span>
+                {% endif %}
+                {% if item.inputs.preferences %}
+                <span class="platform-tag">{{ item.inputs.preferences }}</span>
+                {% endif %}
+                {% if item.inputs.occasion %}
+                <span class="platform-tag">{{ item.inputs.occasion }}</span>
+                {% endif %}
+                {% if item.inputs.style_preference %}
+                <span class="platform-tag">{{ item.inputs.style_preference }}</span>
+                {% endif %}
+            </div>
+
+            <p class="history-preview">{{ item.result[:250] }}...</p>
+
+            <div class="history-expand">
+                <div class="ai-content" id="history-{{ item.id }}">
+                    {{ item.result | replace('\n', '<br>') | safe }}
+                </div>
+            </div>
+
+            <div style="margin-top: 8px; font-size: 0.78rem; color: var(--text-muted);">
+                <i class="fas fa-chevron-down"></i> Click to expand / collapse
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state" style="max-width: var(--container-max); margin: 0 auto;">
+        <i class="fas fa-clipboard-list"></i>
+        <h3>No history yet</h3>
+        <p>Your AI-generated recommendations will appear here after you use any planner.</p>
+        <a href="/dashboard" class="btn btn-primary btn-sm">
+            <i class="fas fa-th-large"></i> Go to Dashboard
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

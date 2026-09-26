@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}PocketSmart AI{% endblock %}</title>
+    <meta name="description" content="{% block meta_desc %}PocketSmart AI – Your intelligent budget planning assistant for home interiors, party planning, and jewelry selection.{% endblock %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">
+                <div class="logo-icon">
+                    <i class="fas fa-wallet"></i>
+                </div>
+                <span class="logo-text">Pocket<span class="logo-accent">Smart</span> AI</span>
+            </a>
+            <div class="nav-links" id="navLinks">
+                <a href="/" class="nav-link">Home</a>
+                {% if user %}
+                <a href="/dashboard" class="nav-link">Dashboard</a>
+                <a href="/home-planner" class="nav-link">Home Planner</a>
+                <a href="/party-planner" class="nav-link">Party Planner</a>
+                <a href="/jewelry-planner" class="nav-link">Jewelry Planner</a>
+                <a href="/history" class="nav-link">History</a>
+                <div class="nav-user">
+                    <span class="user-avatar"><i class="fas fa-user-circle"></i></span>
+                    <span class="user-name">{{ user.username }}</span>
+                    <a href="/logout" class="nav-btn nav-btn-outline">Logout</a>
+                </div>
+                {% else %}
+                <a href="/login" class="nav-btn nav-btn-outline">Login</a>
+                <a href="/register" class="nav-btn nav-btn-primary">Get Started</a>
+                {% endif %}
+            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <a href="/" class="footer-logo">
+                    <div class="logo-icon"><i class="fas fa-wallet"></i></div>
+                    <span>Pocket<span class="logo-accent">Smart</span> AI</span>
+                </a>
+                <p class="footer-tagline">Intelligent budget planning powered by Gemini AI. Plan smarter, spend wisely.</p>
+                <div class="footer-socials">
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-links-group">
+                <h4>Planners</h4>
+                <a href="/home-planner">Home Interior</a>
+                <a href="/party-planner">Party Planner</a>
+                <a href="/jewelry-planner">Jewelry Advisor</a>
+            </div>
+            <div class="footer-links-group">
+                <h4>Platforms</h4>
+                <a href="https://www.amazon.in" target="_blank">Amazon</a>
+                <a href="https://www.flipkart.com" target="_blank">Flipkart</a>
+                <a href="https://www.ikea.com/in" target="_blank">IKEA</a>
+                <a href="https://www.swiggy.com" target="_blank">Swiggy</a>
+                <a href="https://www.zomato.com" target="_blank">Zomato</a>
+            </div>
+            <div class="footer-links-group">
+                <h4>Account</h4>
+                <a href="/login">Login</a>
+                <a href="/register">Register</a>
+                <a href="/dashboard">Dashboard</a>
+                <a href="/history">History</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 PocketSmart AI. All rights reserved. Powered by <strong>Gemini AI</strong>.</p>
+        </div>
+    </footer>
+
+    <script src="/static/js/main.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

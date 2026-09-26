@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block title %}Party Budget Planner – PocketSmart AI{% endblock %}
+
+{% block content %}
+<div class="planner-page">
+    <div class="planner-container">
+        <div class="planner-form-card">
+            <h2><i class="fas fa-glass-cheers" style="color: #f59e0b;"></i> Party Budget Planner</h2>
+            <p class="form-subtitle">Plan your event with AI-powered budget allocation across catering, decoration, venue & entertainment.</p>
+
+            <form id="partyForm" onsubmit="submitPartyPlan(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="budget">Total Budget (₹)</label>
+                        <input type="number" id="budget" class="form-control" placeholder="e.g., 50000" required min="1000">
+                    </div>
+                    <div class="form-group">
+                        <label for="guestCount">Guest Count</label>
+                        <input type="number" id="guestCount" class="form-control" placeholder="e.g., 50" required min="1">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="eventType">Event Type</label>
+                        <select id="eventType" class="form-control">
+                            <option value="birthday">Birthday Party</option>
+                            <option value="wedding">Wedding</option>
+                            <option value="engagement">Engagement</option>
+                            <option value="anniversary">Anniversary</option>
+                            <option value="corporate">Corporate Event</option>
+                            <option value="conference">Conference / Seminar</option>
+                            <option value="baby shower">Baby Shower</option>
+                            <option value="farewell">Farewell Party</option>
+                            <option value="housewarming">Housewarming</option>
+                            <option value="graduation">Graduation Party</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="foodPreference">Food Preference</label>
+                        <select id="foodPreference" class="form-control">
+                            <option value="mixed">Mixed (Veg + Non-Veg)</option>
+                            <option value="vegetarian">Pure Vegetarian</option>
+                            <option value="non-vegetarian">Non-Vegetarian</option>
+                            <option value="vegan">Vegan</option>
+                            <option value="jain">Jain</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="theme">Party Theme (Optional)</label>
+                    <input type="text" id="theme" class="form-control" placeholder="e.g., Retro, Bollywood, Tropical, Minimalist...">
+                </div>
+
+                <div class="form-group">
+                    <label for="venueDetails">Venue Details</label>
+                    <textarea id="venueDetails" class="form-control" placeholder="Describe venue preference: indoor/outdoor, city, approximate area, any specific requirements..." rows="3"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-warm btn-block btn-lg" id="submitBtn">
+                    <i class="fas fa-wand-magic-sparkles"></i> Generate Party Plan
+                </button>
+            </form>
+        </div>
+
+        <div id="resultsContainer" class="results-container"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+async function submitPartyPlan(e) {
+    e.preventDefault();
+
+    const budget = document.getElementById('budget').value;
+    const guestCount = document.getElementById('guestCount').value;
+    const eventType = document.getElementById('eventType').value;
+    const foodPreference = document.getElementById('foodPreference').value;
+    const theme = document.getElementById('theme').value;
+    const venueDetails = document.getElementById('venueDetails').value;
+
+    showLoading('Planning your perfect event...', 'Gemini AI is allocating budget and finding the best options');
+
+    try {
+        const response = await fetch('/generate-party', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                budget: parseFloat(budget),
+                guest_count: parseInt(guestCount),
+                event_type: eventType,
+                food_preference: foodPreference,
+                theme: theme,
+                venue_details: venueDetails
+            })
+        });
+
+        if (!response.ok) {
+            const err = await response.json();
+            throw new Error(err.detail || 'Failed to generate party plan');
+        }
+
+        const data = await response.json();
+
+        // Show budget allocation before AI response
+        if (data.allocation) {
+            const allocationHtml = `
+                <div class="result-card">
+                    <h3><i class="fas fa-chart-pie"></i> Budget Allocation</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px;">
+                        ${Object.entries(data.allocation).map(([cat, pct]) => `
+                            <div style="background: var(--bg-glass); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px; text-align: center;">
+                                <div style="font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; background: var(--gradient-warm); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">${pct}%</div>
+                                <div style="font-size: 0.78rem; color: var(--text-secondary); text-transform: capitalize; margin-top: 4px;">${cat}</div>
+                                <div style="font-size: 0.82rem; color: var(--text-primary); font-weight: 600; margin-top: 2px;">₹${Math.round(parseFloat(budget) * pct / 100).toLocaleString()}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            const container = document.getElementById('resultsContainer');
+            container.innerHTML = allocationHtml;
+        }
+
+        displayResults(data);
+    } catch (error) {
+        alert('Error: ' + error.message);
+    } finally {
+        hideLoading();
+    }
+}
+</script>
+{% endblock %}

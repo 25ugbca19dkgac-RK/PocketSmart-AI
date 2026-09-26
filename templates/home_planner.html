@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+{% block title %}Home Interior Planner – PocketSmart AI{% endblock %}
+
+{% block content %}
+<div class="planner-page">
+    <div class="planner-container">
+        <div class="planner-form-card">
+            <h2><i class="fas fa-couch" style="color: #06b6d4;"></i> Home Interior Planner</h2>
+            <p class="form-subtitle">Enter your budget, rooms, and preferences to get AI-powered interior design recommendations.</p>
+
+            <form id="homeForm" onsubmit="submitHomePlan(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="budget">Total Budget (₹)</label>
+                        <input type="number" id="budget" class="form-control" placeholder="e.g., 100000" required min="1000">
+                    </div>
+                    <div class="form-group">
+                        <label for="familySize">Family Size</label>
+                        <input type="number" id="familySize" class="form-control" placeholder="e.g., 4" required min="1" value="4">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="preferences">Style Preferences</label>
+                    <select id="preferences" class="form-control">
+                        <option value="modern minimalist">Modern Minimalist</option>
+                        <option value="contemporary">Contemporary</option>
+                        <option value="traditional Indian">Traditional Indian</option>
+                        <option value="scandinavian">Scandinavian</option>
+                        <option value="industrial">Industrial</option>
+                        <option value="bohemian">Bohemian</option>
+                        <option value="luxury">Luxury</option>
+                        <option value="budget-friendly">Budget-Friendly</option>
+                    </select>
+                </div>
+
+                <h3 style="font-size: 1rem; margin-bottom: 16px; color: var(--text-primary);">
+                    <i class="fas fa-door-open" style="color: var(--accent-primary);"></i> Rooms & Items
+                </h3>
+
+                <div id="roomsContainer">
+                    <!-- Room 1: Living Room -->
+                    <div class="room-entry" data-room="Living Room">
+                        <button type="button" class="remove-room" onclick="removeRoom(this)" title="Remove room">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <h4><i class="fas fa-tv"></i> Living Room</h4>
+                        <div class="room-items-grid">
+                            <div class="item-counter">
+                                <label>Lights</label>
+                                <div class="counter-control">
+                                    <button type="button" class="counter-minus">−</button>
+                                    <input type="number" value="2" min="0" data-item="lights">
+                                    <button type="button" class="counter-plus">+</button>
+                                </div>
+                            </div>
+                            <div class="item-counter">
+                                <label>Ceiling Fans</label>
+                                <div class="counter-control">
+                                    <button type="button" class="counter-minus">−</button>
+                                    <input type="number" value="1" min="0" data-item="ceiling fans">
+                                    <button type="button" class="counter-plus">+</button>
+                                </div>
+                            </div>
+                            <div class="item-counter">
+                                <label>Sofas</label>
+                                <div class="counter-control">
+                                    <button type="button" class="counter-minus">−</button>
+                                    <input type="number" value="1" min="0" data-item="sofas">
+                                    <button type="button" class="counter-plus">+</button>
+                                </div>
+                            </div>
+                            <div class="item-counter">
+                                <label>Tables</label>
+                                <div class="counter-control">
+                                    <button type="button" class="counter-minus">−</button>
+                                    <input type="number" value="1" min="0" data-item="tables">
+                                    <button type="button" class="counter-plus">+</button>
+                                </div>
+                            </div>
+                            <div class="item-counter">
+                                <label>Curtains</label>
+                                <div class="counter-control">
+                                    <button type="button" class="counter-minus">−</button>
+                                    <input type="number" value="2" min="0" data-item="curtains">
+                                    <button type="button" class="counter-plus">+</button>
+                                </div>
+                            </div>
+                            <div class="item-counter">
+                                <label>Wall Art</label>
+                                <div class="counter-control">
+                                    <button type="button" class="counter-minus">−</button>
+                                    <input type="number" value="1" min="0" data-item="wall art">
+                                    <button type="button" class="counter-plus">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" class="btn-add-room" onclick="addRoom()">
+                    <i class="fas fa-plus"></i> Add Another Room
+                </button>
+
+                <button type="submit" class="btn btn-cool btn-block btn-lg" id="submitBtn">
+                    <i class="fas fa-wand-magic-sparkles"></i> Generate Recommendations
+                </button>
+            </form>
+        </div>
+
+        <div id="resultsContainer" class="results-container"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const roomTemplates = {
+    'Bedroom': {items: ['lights', 'ceiling fans', 'beds', 'wardrobes', 'side tables', 'curtains'], icon: 'fa-bed'},
+    'Kitchen': {items: ['lights', 'exhaust fans', 'cabinets', 'dining tables', 'chairs', 'storage units'], icon: 'fa-utensils'},
+    'Bathroom': {items: ['lights', 'mirrors', 'shelves', 'towel racks'], icon: 'fa-bath'},
+    'Study Room': {items: ['lights', 'desks', 'chairs', 'bookshelves', 'lamps'], icon: 'fa-book'},
+    'Dining Room': {items: ['lights', 'dining tables', 'chairs', 'cabinets', 'wall art'], icon: 'fa-chair'},
+    'Balcony': {items: ['lights', 'chairs', 'plants', 'tables'], icon: 'fa-leaf'},
+};
+
+function addRoom() {
+    const container = document.getElementById('roomsContainer');
+    const existing = container.querySelectorAll('.room-entry');
+    const usedRooms = Array.from(existing).map(el => el.dataset.room);
+    const available = Object.keys(roomTemplates).filter(r => !usedRooms.includes(r));
+
+    if (available.length === 0) {
+        alert('All room types have been added!');
+        return;
+    }
+
+    const roomType = available[0];
+    const template = roomTemplates[roomType];
+
+    let itemsHtml = template.items.map(item => `
+        <div class="item-counter">
+            <label>${item.charAt(0).toUpperCase() + item.slice(1)}</label>
+            <div class="counter-control">
+                <button type="button" class="counter-minus">−</button>
+                <input type="number" value="0" min="0" data-item="${item}">
+                <button type="button" class="counter-plus">+</button>
+            </div>
+        </div>
+    `).join('');
+
+    const roomHtml = `
+        <div class="room-entry" data-room="${roomType}">
+            <button type="button" class="remove-room" onclick="removeRoom(this)" title="Remove room">
+                <i class="fas fa-times"></i>
+            </button>
+            <h4><i class="fas ${template.icon}"></i> ${roomType}</h4>
+            <div class="room-items-grid">${itemsHtml}</div>
+        </div>
+    `;
+
+    container.insertAdjacentHTML('beforeend', roomHtml);
+    initCounters();
+}
+
+function removeRoom(btn) {
+    btn.closest('.room-entry').remove();
+}
+
+async function submitHomePlan(e) {
+    e.preventDefault();
+    const budget = document.getElementById('budget').value;
+    const familySize = document.getElementById('familySize').value;
+    const preferences = document.getElementById('preferences').value;
+
+    // Gather rooms data
+    const rooms = [];
+    document.querySelectorAll('.room-entry').forEach(roomEl => {
+        const roomType = roomEl.dataset.room;
+        const items = {};
+        roomEl.querySelectorAll('input[data-item]').forEach(input => {
+            const val = parseInt(input.value) || 0;
+            if (val > 0) items[input.dataset.item] = val;
+        });
+        if (Object.keys(items).length > 0) {
+            rooms.push({ room_type: roomType, items: items });
+        }
+    });
+
+    if (rooms.length === 0) {
+        alert('Please add at least one item to a room.');
+        return;
+    }
+
+    showLoading('Designing your home interior...', 'Gemini AI is analyzing your budget and preferences');
+
+    try {
+        const response = await fetch('/generate-home', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                budget: parseFloat(budget),
+                family_size: parseInt(familySize),
+                preferences: preferences,
+                rooms: rooms
+            })
+        });
+
+        if (!response.ok) {
+            const err = await response.json();
+            throw new Error(err.detail || 'Failed to generate recommendations');
+        }
+
+        const data = await response.json();
+        displayResults(data);
+    } catch (error) {
+        alert('Error: ' + error.message);
+    } finally {
+        hideLoading();
+    }
+}
+</script>
+{% endblock %}

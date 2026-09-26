@@ -1,0 +1,242 @@
+{% extends "base.html" %}
+{% block title %}PocketSmart AI – Smart Budget & Recommendation Assistant{% endblock %}
+{% block meta_desc %}Plan your home interiors, parties, and jewelry shopping with AI-powered budget recommendations from Amazon, Flipkart, IKEA, Swiggy, Zomato & more.{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-badge">
+            <i class="fas fa-bolt"></i>
+            Powered by Gemini AI
+        </div>
+        <h1 class="hero-title">
+            Your Smart Budget &<br>
+            <span class="gradient-text">Recommendation Assistant</span>
+        </h1>
+        <p class="hero-description">
+            From home interiors to party planning and jewelry selection — get AI-powered, 
+            budget-aware recommendations from top platforms. Spend smarter, live better.
+        </p>
+        <div class="hero-actions">
+            {% if user %}
+            <a href="/dashboard" class="btn btn-primary btn-lg">
+                <i class="fas fa-th-large"></i> Go to Dashboard
+            </a>
+            {% else %}
+            <a href="/register" class="btn btn-primary btn-lg">
+                <i class="fas fa-rocket"></i> Get Started Free
+            </a>
+            <a href="#features" class="btn btn-outline btn-lg">
+                <i class="fas fa-play-circle"></i> See How It Works
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Stats -->
+<section class="section" style="padding-top:60px; padding-bottom:40px;">
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-value">7+</div>
+            <div class="stat-label">Platforms Integrated</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">3</div>
+            <div class="stat-label">Smart Planners</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">AI</div>
+            <div class="stat-label">Gemini Powered</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">∞</div>
+            <div class="stat-label">Budget Possibilities</div>
+        </div>
+    </div>
+</section>
+
+<!-- Features -->
+<section class="section" id="features">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-label"><i class="fas fa-star"></i> Features</div>
+            <h2 class="section-title">Three Powerful Planners, One Smart Platform</h2>
+            <p class="section-subtitle">
+                Each planner uses Gemini AI to analyze your budget and deliver personalized, 
+                platform-aware recommendations you can trust.
+            </p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon home-icon">
+                    <i class="fas fa-couch"></i>
+                </div>
+                <h3>Home Interior Planner</h3>
+                <p>
+                    Specify your rooms, items, and budget. Get tailored furniture, lighting, and decor 
+                    recommendations across IKEA, Amazon, and Flipkart with proportional budget allocation.
+                </p>
+                <div class="feature-platforms">
+                    <span class="platform-tag">Amazon</span>
+                    <span class="platform-tag">Flipkart</span>
+                    <span class="platform-tag">IKEA</span>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon party-icon">
+                    <i class="fas fa-glass-cheers"></i>
+                </div>
+                <h3>Party Budget Planner</h3>
+                <p>
+                    Plan events from birthdays to weddings. AI allocates budget across catering, 
+                    decoration, venue, and entertainment — sourcing options from Swiggy, Zomato, and OYO.
+                </p>
+                <div class="feature-platforms">
+                    <span class="platform-tag">Swiggy</span>
+                    <span class="platform-tag">Zomato</span>
+                    <span class="platform-tag">OYO</span>
+                    <span class="platform-tag">Amazon</span>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon jewelry-icon">
+                    <i class="fas fa-gem"></i>
+                </div>
+                <h3>Jewelry Advisor</h3>
+                <p>
+                    Upload an outfit image or describe your style. Gemini analyzes colors and aesthetics 
+                    to suggest matching jewelry — necklaces, earrings, and bangles within your budget.
+                </p>
+                <div class="feature-platforms">
+                    <span class="platform-tag">Amazon</span>
+                    <span class="platform-tag">Flipkart</span>
+                    <span class="platform-tag">Myntra</span>
+                    <span class="platform-tag">Tanishq</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works -->
+<section class="section" style="background: var(--bg-secondary);">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-label"><i class="fas fa-cogs"></i> Process</div>
+            <h2 class="section-title">How PocketSmart AI Works</h2>
+            <p class="section-subtitle">
+                Four simple steps from budget input to personalized recommendations.
+            </p>
+        </div>
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h4>Set Your Budget</h4>
+                <p>Enter your total budget and select your planning category — Home, Party, or Jewelry.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h4>Add Preferences</h4>
+                <p>Specify room details, event type, style preferences, or upload an outfit image.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h4>AI Generates Plan</h4>
+                <p>Gemini AI analyzes your inputs and generates budget-optimized recommendations.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h4>Shop & Save</h4>
+                <p>Browse curated product links across Amazon, IKEA, Flipkart, and more — within budget.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-label"><i class="fas fa-heart"></i> Testimonials</div>
+            <h2 class="section-title">What Our Users Say</h2>
+            <p class="section-subtitle">
+                Real stories from users who planned smarter with PocketSmart AI.
+            </p>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <div class="testimonial-stars">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+                <p class="testimonial-text">
+                    "I redecorated my entire 2BHK apartment within ₹80,000 using the Home Planner. 
+                    The AI suggested products I never would have found on my own. Absolutely brilliant!"
+                </p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar">PR</div>
+                    <div class="testimonial-info">
+                        <h5>Priya Rao</h5>
+                        <span>Home Interior Planning</span>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-stars">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+                <p class="testimonial-text">
+                    "Planned my daughter's birthday party for 50 guests under ₹25,000. The budget 
+                    breakdown across food, decor, and entertainment was spot-on. Saved hours of research!"
+                </p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar">AK</div>
+                    <div class="testimonial-info">
+                        <h5>Arjun Kumar</h5>
+                        <span>Party Budget Planning</span>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-stars">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                </div>
+                <p class="testimonial-text">
+                    "I uploaded my saree photo and got perfect jewelry match suggestions within my 
+                    ₹15,000 budget. The color coordination tips were incredibly helpful for my sister's wedding."
+                </p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar">SM</div>
+                    <div class="testimonial-info">
+                        <h5>Sneha Mishra</h5>
+                        <span>Jewelry Selection</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="section" style="background: var(--gradient-hero); text-align:center;">
+    <div class="container">
+        <h2 class="section-title">Ready to Plan Smarter?</h2>
+        <p class="section-subtitle" style="margin-bottom:36px;">
+            Join PocketSmart AI and transform your budgeting experience with the power of Gemini AI.
+        </p>
+        {% if user %}
+        <a href="/dashboard" class="btn btn-primary btn-lg">
+            <i class="fas fa-th-large"></i> Open Dashboard
+        </a>
+        {% else %}
+        <a href="/register" class="btn btn-primary btn-lg">
+            <i class="fas fa-rocket"></i> Create Free Account
+        </a>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
